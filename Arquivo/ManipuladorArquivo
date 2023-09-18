@@ -1,0 +1,132 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
+public static void listarProdutos(String path) throws IOException {
+        BufferedReader buffRead = new BufferedReader(new FileReader(path));
+        String linha = buffRead.readLine();
+        String[] colunas;
+        int linhaArquivo = 0;
+        
+        while (true) {
+            if (linha != null) {
+                colunas = linha.split("[|]");
+                // Mostrar info. de cada produto
+                System.out.println("=-=-=-=-= " + linhaArquivo + " =-=-=-=-=");
+                for (int i = 0; i < colunas.length; i++) {                      
+                    System.out.println(colunas[i]);
+                }
+                linhaArquivo++;
+            } else {
+                break;
+            }
+            // próxima linha
+            linha = buffRead.readLine();
+        }
+        buffRead.close();
+    }
+    
+// Calcular total de vendas em cada categoria dos produtos
+public static void listarTotalPorCategoria(String path) throws IOException {
+    BufferedReader buffRead = new BufferedReader(new FileReader(path));
+    String linha;
+    String arquivo = "";
+    String[] categorias;
+    String[] aux;
+    double[] totCategorias;
+    int numLinhas = 0;
+    
+    while (true) {
+        // Identificar o número de linhas do arquivo
+        linha = buffRead.readLine();
+        if (linha != null) {
+            arquivo += linha+";";
+            numLinhas++;
+        } else {
+            break;
+        }
+    }
+    buffRead.close();
+    
+    // Inicializar o vetor
+    categorias = new String[numLinhas];
+    for (int i = 0; i < arquivo.split("[;]").length; i++) {
+        // Separar as strings por regex
+        aux = arquivo.split("[;]")[i].split("[|]");
+        // Adicionar apenas as categorias no vetor de categorias
+        categorias[i] = aux[2];
+    }
+
+    // Remover os elementos repetidos do vetor
+    String categoria = categorias[0]+"|";
+    boolean igual;
+    for (int i = 1; i < categorias.length; i++) {
+        igual = false;
+        for (int j = 0; j < i; j++) {
+            if (categorias[i].equals(categorias[j])) {
+                igual = true;
+                break;
+            }
+        }
+        if (!igual) {
+            categoria += categorias[i]+"|";
+        }
+    }     
+    // Reescrevendo vetor de categorias 
+    categorias = categoria.split("[|]");
+    totCategorias = new double[categorias.length];
+    totCategorias[0] = 0;
+    
+    for (int i = 0; i < categorias.length; i++) {
+        for (int j = 0; j < arquivo.split("[;]").length; j++) {
+            aux = arquivo.split("[;]")[j].split("[|]");
+            
+            if (categorias[i].equals(aux[2])) {
+                totCategorias[i] += Double.parseDouble(aux[6]);
+            }
+        }
+    }
+    
+    
+    for (int i = 0; i < categorias.length; i++) {
+        System.out.println("=-=-=-= " + categorias[i] + " =-=-=-=");
+        System.out.printf("Total: R$%.2f\n", totCategorias[i]);
+        
+    }
+}
+
+public static void leitor(String path, byte opcao) throws IOException {
+    
+    switch (opcao) {
+        case 1:
+            // Listar Produtos
+            listarProdutos(path);
+            System.out.println("=-=-=-=-=-=-=-=-=-=-=");
+            break;
+        case 2:
+            // Listar vendas por categoria
+            listarTotalPorCategoria(path);
+            System.out.println("=-=-=-=-=-=-=-=-=-=-=");
+            break;
+        case 5: 
+            // Finalizar o Programa
+            System.out.println("Fim do Programa...");
+            break;
+        default:
+            System.out.println("Opção inválida...");
+    }
+    
+}
+
+public static void escritor(String path) throws IOException {
+    BufferedWriter buffWrite = new BufferedWriter(new FileWriter(path));
+    String linha = "";
+    Scanner in = new Scanner(System.in);
+    System.out.println("Escreva algo: ");
+    linha = in.nextLine();
+    buffWrite.append(linha + "\n");
+    buffWrite.close();
+}
