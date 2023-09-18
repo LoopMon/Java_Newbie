@@ -1,0 +1,31 @@
+Scanner input = new Scanner(System.in);
+String path = "produtos.txt";
+byte opcao;
+
+System.out.println(path);
+
+do {
+    System.out.println("Escolha uma Opção:");
+    System.out.println("1- Listar Produtos");
+    System.out.println("2- Listar vendas por categoria");
+    System.out.println("3- ???");
+    System.out.println("5- Sair");
+    System.out.print(">> ");
+    opcao = input.nextByte();
+    /*
+    if (opcao == 1) {
+        ManipuladorArquivo.listarProdutos(path);
+    } 
+    else if (opcao == 2) {
+        ManipuladorArquivo.listarTotalPorCategoria(path);
+    }
+    else if (opcao == 5) {
+        System.out.println("Fim do Programa...");
+        break;
+    }
+    else {
+        System.out.println("Opção inválida...");
+    }
+    */
+    ManipuladorArquivo.leitor(path, opcao);
+} while (opcao < 5); 
